@@ -78,6 +78,10 @@ static mp_obj_t machine_mem_subscr(mp_obj_t self_in, mp_obj_t index, mp_obj_t va
             case 2:
                 val = (*(uint16_t *)addr);
                 break;
+#if MICROPY_PY_MACHINE_MEM64
+            case 8:
+                return mp_obj_new_int_from_ull(*(uint64_t *)addr);
+#endif
             default:
                 val = (*(uint32_t *)addr);
                 break;
@@ -94,6 +98,13 @@ static mp_obj_t machine_mem_subscr(mp_obj_t self_in, mp_obj_t index, mp_obj_t va
             case 2:
                 (*(uint16_t *)addr) = val;
                 break;
+#if MICROPY_PY_MACHINE_MEM64
+            case 8: {
+                uint64_t val64 = (uint64_t)mp_obj_get_ll(value);
+                (*(uint64_t *)addr) = val64;
+                break;
+            }
+#endif
             default:
                 (*(uint32_t *)addr) = val;
                 break;
@@ -113,6 +124,9 @@ MP_DEFINE_CONST_OBJ_TYPE(
 const machine_mem_obj_t machine_mem8_obj = {{&machine_mem_type}, 1};
 const machine_mem_obj_t machine_mem16_obj = {{&machine_mem_type}, 2};
 const machine_mem_obj_t machine_mem32_obj = {{&machine_mem_type}, 4};
+#if MICROPY_PY_MACHINE_MEM64
+const machine_mem_obj_t machine_mem64_obj = {{&machine_mem_type}, 8};
+#endif
 
 #endif // MICROPY_PY_MACHINE_MEMX
 

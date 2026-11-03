@@ -2099,6 +2099,15 @@ typedef time_t mp_timestamp_t;
 #define MICROPY_PY_MACHINE_MEMX (MICROPY_PY_MACHINE)
 #endif
 
+// Whether to provide the machine.mem64 object
+#ifndef MICROPY_PY_MACHINE_MEM64
+#if defined(UINTPTR_MAX) && defined(UINT64_MAX)
+#define MICROPY_PY_MACHINE_MEM64 (MICROPY_PY_MACHINE_MEMX && (UINTPTR_MAX == UINT64_MAX) && (MICROPY_LONGINT_IMPL != MICROPY_LONGINT_IMPL_NONE))
+#else
+#define MICROPY_PY_MACHINE_MEM64 (0)
+#endif
+#endif
+
 // Whether to provide the "machine.mem_backup" function
 #ifndef MICROPY_PY_MACHINE_MEM_BACKUP
 #define MICROPY_PY_MACHINE_MEM_BACKUP (0)
